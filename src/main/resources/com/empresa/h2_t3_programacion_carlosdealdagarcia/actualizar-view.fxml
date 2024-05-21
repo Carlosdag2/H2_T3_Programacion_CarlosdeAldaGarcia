@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.empresa.h2_t3_programacion_carlosdealdagarcia.ActualizarController">
+    <Label text="Actualizar Usuario"/>
+    <TextField fx:id="campoNombre" promptText="Nombre"/>
+    <TextField fx:id="campoCorreo" promptText="Correo"/>
+    <TextField fx:id="campoContrasena" promptText="Contraseña"/>
+    <Button text="Actualizar" onAction="#manejarActualizar"/>
+</VBox>

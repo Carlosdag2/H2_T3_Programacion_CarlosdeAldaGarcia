@@ -9,13 +9,20 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import com.mongodb.ConnectionString;
+
+import java.io.IOException;
 
 public class HelloController {
 
@@ -55,15 +62,6 @@ public class HelloController {
 
         // Cargar datos iniciales
         cargarDatos();
-
-        tablaDatos.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                Persona personaSeleccionada = newSelection;
-                campoNombre.setText(personaSeleccionada.getNombre());
-                campoCorreo.setText(personaSeleccionada.getCorreo());
-                campoContrasena.setText(personaSeleccionada.getContrasena());
-            }
-        });
     }
 
     private void cargarDatos() {
@@ -85,7 +83,11 @@ public class HelloController {
             cargarDatos();
         } catch (MongoWriteException e) {
             if (e.getError().getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
-                System.out.println("Error: El correo ya existe en la base de datos.");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Error: El correo ya existe en la base de datos.");
+                alert.showAndWait();
             } else {
                 throw e;
             }
@@ -95,11 +97,31 @@ public class HelloController {
     @FXML
     private void manejarActualizar() {
         Persona personaSeleccionada = tablaDatos.getSelectionModel().getSelectedItem();
-        if (personaSeleccionada != null) {
-            Document query = new Document("_id", new ObjectId(personaSeleccionada.getId()));
-            Document update = new Document("$set", new Document("nombre", campoNombre.getText()).append("correo", campoCorreo.getText()).append("contrasena", campoContrasena.getText()));
-            coleccion.updateOne(query, update);
-            cargarDatos();
+        if (personaSeleccionada == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Advertencia");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor, selecciona un usuario para actualizar.");
+            alert.showAndWait();
+        } else {
+            try {
+                // Cargar la vista de actualización
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("actualizar-view.fxml"));
+                Parent root = fxmlLoader.load();
+
+                // Obtener el controlador y pasarle la persona seleccionada
+                ActualizarController actualizarController = fxmlLoader.getController();
+                actualizarController.setPersona(personaSeleccionada);
+
+                // Crear una nueva ventana y mostrarla
+                Stage stage = new Stage();
+                stage.setTitle("Actualizar Usuario");
+                stage.setScene(new Scene(root, 400, 300));
+                stage.show();
+                stage.setOnHidden(e -> cargarDatos()); // Recargar los datos cuando la ventana se cierre
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
