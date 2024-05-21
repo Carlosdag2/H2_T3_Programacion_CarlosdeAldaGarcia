@@ -3,10 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="237.0" prefWidth="398.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.empresa.h2_t3_programacion_carlosdealdagarcia.ActualizarController">
-    <Label text="Actualizar Usuario" />
-    <TextField fx:id="campoNombre" promptText="Nombre" />
-    <TextField fx:id="campoCorreo" promptText="Correo" />
-    <PasswordField fx:id="campoContrasena" promptText="Contraseña" />
-    <Button onAction="#manejarActualizar" text="Actualizar" />
+<VBox prefHeight="237.0" prefWidth="398.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.empresa.h2_t3_programacion_carlosdealdagarcia.ActualizarController" stylesheets="@styles.css" styleClass="update-view">
+    <Label text="Actualizar Usuario" styleClass="label-title"/>
+    <TextField fx:id="campoNombre" promptText="Nombre" styleClass="text-field"/>
+    <TextField fx:id="campoCorreo" promptText="Correo" styleClass="text-field"/>
+    <PasswordField fx:id="campoContrasena" promptText="Contraseña" styleClass="password-field"/>
+    <Button onAction="#manejarActualizar" text="Actualizar" styleClass="button"/>
 </VBox>

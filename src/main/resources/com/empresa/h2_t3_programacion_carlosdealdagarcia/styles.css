@@ -4,6 +4,14 @@
     -fx-background-color: #f4f4f4;
 }
 
+/* Label styling */
+.label-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-padding: 10 0 20 0; /* Extra bottom padding for spacing */
+}
+
 /* TextField styling */
 .text-field, .password-field {
     -fx-prompt-text-fill: #757575;
@@ -11,7 +19,8 @@
     -fx-background-color: #ffffff;
     -fx-border-color: #cccccc;
     -fx-border-radius: 5;
-    -fx-padding: 5 10;
+    -fx-padding: 10; /* Increased padding for better spacing */
+    -fx-pref-height: 40px; /* Ensure consistent height */
 }
 
 /* Button styling */
@@ -21,7 +30,8 @@
     -fx-font-weight: bold;
     -fx-background-radius: 5;
     -fx-cursor: hand;
-    -fx-padding: 8 15;
+    -fx-padding: 10 20; /* Increased padding for a larger button */
+    -fx-pref-height: 40px; /* Ensure consistent height */
 }
 
 .button:hover {
@@ -39,7 +49,8 @@
     -fx-font-weight: bold;
     -fx-background-radius: 5;
     -fx-cursor: hand;
-    -fx-padding: 8 15;
+    -fx-padding: 10 20; /* Increased padding for a larger button */
+    -fx-pref-height: 40px; /* Ensure consistent height */
 }
 
 .botoneliminar:hover {
@@ -93,4 +104,10 @@
 /* HBox styling */
 .hbox {
     -fx-spacing: 10;
+}
+
+/* Add specific padding and spacing for the VBox in the update view */
+.update-view {
+    -fx-padding: 20;
+    -fx-spacing: 20;
 }
