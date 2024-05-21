@@ -20,7 +20,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import com.mongodb.ConnectionString;
 
 import java.io.IOException;
 
@@ -67,7 +66,11 @@ public class HelloController {
     private void cargarDatos() {
         tablaDatos.getItems().clear();
         for (Document doc : coleccion.find()) {
-            Persona persona = new Persona(doc.getObjectId("_id").toString(), doc.getString("nombre"), doc.getString("correo"), doc.getString("contrasena"));
+            String contrasenaDescifrada = Cipher.decrypt(doc.getString("contrasena"));
+            Persona persona = new Persona(doc.getObjectId("_id").toString(),
+                    doc.getString("nombre"),
+                    doc.getString("correo"),
+                    contrasenaDescifrada);
             tablaDatos.getItems().add(persona);
         }
     }
@@ -85,7 +88,8 @@ public class HelloController {
             alert.setContentText("Por favor, rellena todos los campos.");
             alert.showAndWait();
         } else {
-            Document doc = new Document("nombre", nombre).append("correo", correo).append("contrasena", contrasena);
+            String contrasenaCifrada = Cipher.encrypt(contrasena);
+            Document doc = new Document("nombre", nombre).append("correo", correo).append("contrasena", contrasenaCifrada);
             try {
                 coleccion.insertOne(doc);
                 cargarDatos();
