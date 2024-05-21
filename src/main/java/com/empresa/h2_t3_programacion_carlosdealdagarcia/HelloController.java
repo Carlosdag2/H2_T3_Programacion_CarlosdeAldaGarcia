@@ -1,9 +1,13 @@
 package com.empresa.h2_t3_programacion_carlosdealdagarcia;
 
+import com.mongodb.ErrorCategory;
+import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.IndexOptions;
+import com.mongodb.client.model.Indexes;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -47,8 +51,19 @@ public class HelloController {
         MongoDatabase database = mongoClient.getDatabase("hito2_mongo");
         coleccion = database.getCollection("usuarios");
 
+        coleccion.createIndex(Indexes.ascending("correo"), new IndexOptions().unique(true));
+
         // Cargar datos iniciales
         cargarDatos();
+
+        tablaDatos.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                Persona personaSeleccionada = newSelection;
+                campoNombre.setText(personaSeleccionada.getNombre());
+                campoCorreo.setText(personaSeleccionada.getCorreo());
+                campoContrasena.setText(personaSeleccionada.getContrasena());
+            }
+        });
     }
 
     private void cargarDatos() {
@@ -65,8 +80,16 @@ public class HelloController {
         String correo = campoCorreo.getText();
         String contrasena = campoContrasena.getText();
         Document doc = new Document("nombre", nombre).append("correo", correo).append("contrasena", contrasena);
-        coleccion.insertOne(doc);
-        cargarDatos();
+        try {
+            coleccion.insertOne(doc);
+            cargarDatos();
+        } catch (MongoWriteException e) {
+            if (e.getError().getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
+                System.out.println("Error: El correo ya existe en la base de datos.");
+            } else {
+                throw e;
+            }
+        }
     }
 
     @FXML
