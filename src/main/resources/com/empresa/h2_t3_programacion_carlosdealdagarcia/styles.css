@@ -1,0 +1,96 @@
+/* General styling */
+.root {
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-background-color: #f4f4f4;
+}
+
+/* TextField styling */
+.text-field, .password-field {
+    -fx-prompt-text-fill: #757575;
+    -fx-background-radius: 5;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-padding: 5 10;
+}
+
+/* Button styling */
+.button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-padding: 8 15;
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+.button:pressed {
+    -fx-background-color: #3e8e41;
+}
+
+/* Red Button styling */
+.botoneliminar {
+    -fx-background-color: #f44336; /* Red color */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-padding: 8 15;
+}
+
+.botoneliminar:hover {
+    -fx-background-color: #e53935;
+}
+
+.botoneliminar:pressed {
+    -fx-background-color: #d32f2f;
+}
+
+/* Table styling */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dddddd;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+.table-column-header-background {
+    -fx-background-color: #eeeeee;
+}
+
+.table-column {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-border-color: #dddddd;
+}
+
+.table-row-cell:selected, .table-cell:selected {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+.table-view:focused .table-cell:focused, .table-view:focused .table-row-cell:focused {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+/* VBox styling */
+.vbox {
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 10;
+    -fx-border-color: #dddddd;
+    -fx-padding: 20;
+    -fx-spacing: 20;
+}
+
+/* HBox styling */
+.hbox {
+    -fx-spacing: 10;
+}

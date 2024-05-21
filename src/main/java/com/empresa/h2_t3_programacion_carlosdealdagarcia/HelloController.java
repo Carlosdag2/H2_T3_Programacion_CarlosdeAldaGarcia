@@ -59,6 +59,15 @@ public class HelloController {
         columnaCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
         columnaContrasena.setCellValueFactory(new PropertyValueFactory<>("contrasena"));
 
+        // Configurar la política de redimensionamiento de las columnas
+        tablaDatos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Ajustar cada columna para que ocupe una proporción del ancho disponible
+        columnaId.setMaxWidth(1f * Integer.MAX_VALUE * 10);        // 10% del ancho disponible
+        columnaNombre.setMaxWidth(1f * Integer.MAX_VALUE * 30);    // 30% del ancho disponible
+        columnaCorreo.setMaxWidth(1f * Integer.MAX_VALUE * 30);    // 30% del ancho disponible
+        columnaContrasena.setMaxWidth(1f * Integer.MAX_VALUE * 30); // 30% del ancho disponible
+
         // Establecer conexión a MongoDB
         mongoClient = MongoClients.create("mongodb+srv://admin:admin@cluster0.gomt1im.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
         MongoDatabase database = mongoClient.getDatabase("hito2_mongo");

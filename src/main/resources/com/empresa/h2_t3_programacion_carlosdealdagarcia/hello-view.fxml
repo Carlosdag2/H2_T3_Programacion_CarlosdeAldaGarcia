@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -11,14 +10,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.PasswordField?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.empresa.h2_t3_programacion_carlosdealdagarcia.HelloController">
+      fx:controller="com.empresa.h2_t3_programacion_carlosdealdagarcia.HelloController"
+      styleClass="vbox"
+      stylesheets="@styles.css">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
     <TextField fx:id="campoBusqueda" promptText="Buscar por correo..."/>
 
-    <TableView fx:id="tablaDatos" VBox.vgrow="ALWAYS">
+    <TableView fx:id="tablaDatos" VBox.vgrow="ALWAYS" styleClass="table-view">
         <columns>
             <TableColumn fx:id="columnaId" text="ID" prefWidth="100"/>
             <TableColumn fx:id="columnaNombre" text="Nombre" prefWidth="200"/>
@@ -27,12 +28,12 @@
         </columns>
     </TableView>
 
-    <HBox spacing="10">
-        <TextField fx:id="campoNombre" promptText="Nombre"/>
-        <TextField fx:id="campoCorreo" promptText="Correo"/>
-        <PasswordField fx:id="campoContrasena" promptText="Contraseña"/>
-        <Button text="Agregar" onAction="#manejarAgregar"/>
-        <Button text="Actualizar" onAction="#manejarActualizar"/>
-        <Button text="Eliminar" onAction="#manejarEliminar"/>
+    <HBox spacing="10" styleClass="hbox">
+        <TextField fx:id="campoNombre" promptText="Nombre" styleClass="text-field"/>
+        <TextField fx:id="campoCorreo" promptText="Correo" styleClass="text-field"/>
+        <PasswordField fx:id="campoContrasena" promptText="Contraseña" styleClass="password-field"/>
+        <Button text="Agregar" onAction="#manejarAgregar" styleClass="button"/>
+        <Button text="Actualizar" onAction="#manejarActualizar" styleClass="button"/>
+        <Button text="Eliminar" onAction="#manejarEliminar" styleClass="botoneliminar"/>
     </HBox>
 </VBox>
