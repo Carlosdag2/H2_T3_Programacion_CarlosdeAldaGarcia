@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.PasswordField?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.empresa.h2_t3_programacion_carlosdealdagarcia.HelloController">
-  <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-  </padding>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
 
-  <Label fx:id="welcomeText"/>
-  <Button text="Hello!" onAction="#onHelloButtonClick"/>
+    <TableView fx:id="tablaDatos" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="columnaId" text="ID" prefWidth="100"/>
+            <TableColumn fx:id="columnaNombre" text="Nombre" prefWidth="200"/>
+            <TableColumn fx:id="columnaCorreo" text="Correo" prefWidth="200"/>
+            <TableColumn fx:id="columnaContrasena" text="Contraseña" prefWidth="200"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <TextField fx:id="campoNombre" promptText="Nombre"/>
+        <TextField fx:id="campoCorreo" promptText="Correo"/>
+        <PasswordField fx:id="campoContrasena" promptText="Contraseña"/>
+        <Button text="Agregar" onAction="#manejarAgregar"/>
+        <Button text="Actualizar" onAction="#manejarActualizar"/>
+        <Button text="Eliminar" onAction="#manejarEliminar"/>
+    </HBox>
 </VBox>
