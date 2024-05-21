@@ -42,7 +42,8 @@ public class ActualizarController {
     private void manejarActualizar() {
         if (persona != null) {
             Document query = new Document("_id", new ObjectId(persona.getId()));
-            Document update = new Document("$set", new Document("nombre", campoNombre.getText()).append("correo", campoCorreo.getText()).append("contrasena", campoContrasena.getText()));
+            String contrasenaCifrada = Cipher.encrypt(campoContrasena.getText());
+            Document update = new Document("$set", new Document("nombre", campoNombre.getText()).append("correo", campoCorreo.getText()).append("contrasena", contrasenaCifrada));
             try {
                 coleccion.updateOne(query, update);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
