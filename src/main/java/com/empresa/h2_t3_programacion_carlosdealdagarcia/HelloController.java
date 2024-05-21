@@ -166,7 +166,13 @@ public class HelloController {
     @FXML
     private void manejarEliminar() {
         Persona personaSeleccionada = tablaDatos.getSelectionModel().getSelectedItem();
-        if (personaSeleccionada != null) {
+        if (personaSeleccionada == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Advertencia");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor, selecciona un usuario para eliminar.");
+            alert.showAndWait();
+        } else {
             Document query = new Document("_id", new ObjectId(personaSeleccionada.getId()));
             coleccion.deleteOne(query);
             cargarDatos();
