@@ -77,19 +77,31 @@ public class HelloController {
         String nombre = campoNombre.getText();
         String correo = campoCorreo.getText();
         String contrasena = campoContrasena.getText();
-        Document doc = new Document("nombre", nombre).append("correo", correo).append("contrasena", contrasena);
-        try {
-            coleccion.insertOne(doc);
-            cargarDatos();
-        } catch (MongoWriteException e) {
-            if (e.getError().getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Error: El correo ya existe en la base de datos.");
-                alert.showAndWait();
-            } else {
-                throw e;
+
+        if (nombre.isEmpty() || correo.isEmpty() || contrasena.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Advertencia");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor, rellena todos los campos.");
+            alert.showAndWait();
+        } else {
+            Document doc = new Document("nombre", nombre).append("correo", correo).append("contrasena", contrasena);
+            try {
+                coleccion.insertOne(doc);
+                cargarDatos();
+                campoNombre.clear();
+                campoCorreo.clear();
+                campoContrasena.clear();
+            } catch (MongoWriteException e) {
+                if (e.getError().getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Error: El correo ya existe en la base de datos.");
+                    alert.showAndWait();
+                } else {
+                    throw e;
+                }
             }
         }
     }
