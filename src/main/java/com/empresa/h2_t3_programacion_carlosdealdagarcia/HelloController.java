@@ -8,6 +8,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -41,6 +45,9 @@ public class HelloController {
     private TextField campoCorreo;
     @FXML
     private TextField campoContrasena;
+    @FXML
+    private TextField campoBusqueda;
+    private ObservableList<Persona> masterData = FXCollections.observableArrayList();
 
     private MongoClient mongoClient;
     private MongoCollection<Document> coleccion;
@@ -61,18 +68,24 @@ public class HelloController {
 
         // Cargar datos iniciales
         cargarDatos();
+
+        // Agregar un listener al campo de búsqueda
+        campoBusqueda.textProperty().addListener((observable, oldValue, newValue) -> {
+            filtrarPersonas(newValue);
+        });
     }
 
     private void cargarDatos() {
-        tablaDatos.getItems().clear();
+        masterData.clear();
         for (Document doc : coleccion.find()) {
             String contrasenaDescifrada = Cipher.decrypt(doc.getString("contrasena"));
             Persona persona = new Persona(doc.getObjectId("_id").toString(),
                     doc.getString("nombre"),
                     doc.getString("correo"),
                     contrasenaDescifrada);
-            tablaDatos.getItems().add(persona);
+            masterData.add(persona);
         }
+        tablaDatos.setItems(masterData);
     }
 
     @FXML
@@ -149,5 +162,20 @@ public class HelloController {
             coleccion.deleteOne(query);
             cargarDatos();
         }
+    }
+
+    private void filtrarPersonas(String term) {
+        FilteredList<Persona> filteredData = new FilteredList<>(masterData, p -> true);
+
+        if (term == null || term.isEmpty()) {
+            filteredData.setPredicate(persona -> true);
+        } else {
+            String lowerCaseFilter = term.toLowerCase();
+            filteredData.setPredicate(persona -> persona.getCorreo().toLowerCase().contains(lowerCaseFilter));
+        }
+
+        SortedList<Persona> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(tablaDatos.comparatorProperty());
+        tablaDatos.setItems(sortedData);
     }
 }

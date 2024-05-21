@@ -16,6 +16,8 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
+    <TextField fx:id="campoBusqueda" promptText="Buscar por correo..."/>
+
     <TableView fx:id="tablaDatos" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="columnaId" text="ID" prefWidth="100"/>
