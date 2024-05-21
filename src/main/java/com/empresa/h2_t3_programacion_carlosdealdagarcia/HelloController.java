@@ -1,6 +1,7 @@
 package com.empresa.h2_t3_programacion_carlosdealdagarcia;
 
 import com.mongodb.ErrorCategory;
+import com.mongodb.MongoClientException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -16,16 +17,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 public class HelloController {
 
@@ -36,11 +35,11 @@ public class HelloController {
     @FXML
     private TableColumn<Persona, String> columnaNombre;
     @FXML
-    private TextField campoNombre;
-    @FXML
     private TableColumn<Persona, String> columnaCorreo;
     @FXML
     private TableColumn<Persona, String> columnaContrasena;
+    @FXML
+    private TextField campoNombre;
     @FXML
     private TextField campoCorreo;
     @FXML
@@ -69,19 +68,22 @@ public class HelloController {
         columnaContrasena.setMaxWidth(1f * Integer.MAX_VALUE * 30); // 30% del ancho disponible
 
         // Establecer conexión a MongoDB
-        mongoClient = MongoClients.create("mongodb+srv://admin:admin@cluster0.gomt1im.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
-        MongoDatabase database = mongoClient.getDatabase("hito2_mongo");
-        coleccion = database.getCollection("usuarios");
+        try {
+            mongoClient = MongoClients.create("mongodb+srv://admin:admin@cluster0.gomt1im.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+            MongoDatabase database = mongoClient.getDatabase("hito2_mongo");
+            coleccion = database.getCollection("usuarios");
 
-        coleccion.createIndex(Indexes.ascending("correo"), new IndexOptions().unique(true));
+            coleccion.createIndex(Indexes.ascending("correo"), new IndexOptions().unique(true));
+        } catch (MongoClientException e) {
+            showErrorAlert("Error de Conexión", "No se pudo conectar a la base de datos.");
+            return;
+        }
 
         // Cargar datos iniciales
         cargarDatos();
 
         // Agregar un listener al campo de búsqueda
-        campoBusqueda.textProperty().addListener((observable, oldValue, newValue) -> {
-            filtrarPersonas(newValue);
-        });
+        campoBusqueda.textProperty().addListener((observable, oldValue, newValue) -> filtrarPersonas(newValue));
     }
 
     private void cargarDatos() {
@@ -104,11 +106,9 @@ public class HelloController {
         String contrasena = campoContrasena.getText();
 
         if (nombre.isEmpty() || correo.isEmpty() || contrasena.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Advertencia");
-            alert.setHeaderText(null);
-            alert.setContentText("Por favor, rellena todos los campos.");
-            alert.showAndWait();
+            showWarningAlert("Advertencia", "Por favor, rellena todos los campos.");
+        } else if (!isEmailValid(correo)) {
+            showWarningAlert("Advertencia", "Por favor, introduce un correo electrónico válido. Debe incluir un punto (.) después del nombre de dominio y el símbolo @.");
         } else {
             String contrasenaCifrada = Cipher.encrypt(contrasena);
             Document doc = new Document("nombre", nombre).append("correo", correo).append("contrasena", contrasenaCifrada);
@@ -120,11 +120,7 @@ public class HelloController {
                 campoContrasena.clear();
             } catch (MongoWriteException e) {
                 if (e.getError().getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Error: El correo ya existe en la base de datos.");
-                    alert.showAndWait();
+                    showErrorAlert("Error", "El correo ya existe en la base de datos.");
                 } else {
                     throw e;
                 }
@@ -136,27 +132,20 @@ public class HelloController {
     private void manejarActualizar() {
         Persona personaSeleccionada = tablaDatos.getSelectionModel().getSelectedItem();
         if (personaSeleccionada == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Advertencia");
-            alert.setHeaderText(null);
-            alert.setContentText("Por favor, selecciona un usuario para actualizar.");
-            alert.showAndWait();
+            showWarningAlert("Advertencia", "Por favor, selecciona un usuario para actualizar.");
         } else {
             try {
-                // Cargar la vista de actualización
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("actualizar-view.fxml"));
                 Parent root = fxmlLoader.load();
 
-                // Obtener el controlador y pasarle la persona seleccionada
                 ActualizarController actualizarController = fxmlLoader.getController();
                 actualizarController.setPersona(personaSeleccionada);
 
-                // Crear una nueva ventana y mostrarla
                 Stage stage = new Stage();
                 stage.setTitle("Actualizar Usuario");
                 stage.setScene(new Scene(root, 400, 300));
                 stage.show();
-                stage.setOnHidden(e -> cargarDatos()); // Recargar los datos cuando la ventana se cierre
+                stage.setOnHidden(e -> cargarDatos());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -167,11 +156,7 @@ public class HelloController {
     private void manejarEliminar() {
         Persona personaSeleccionada = tablaDatos.getSelectionModel().getSelectedItem();
         if (personaSeleccionada == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Advertencia");
-            alert.setHeaderText(null);
-            alert.setContentText("Por favor, selecciona un usuario para eliminar.");
-            alert.showAndWait();
+            showWarningAlert("Advertencia", "Por favor, selecciona un usuario para eliminar.");
         } else {
             Document query = new Document("_id", new ObjectId(personaSeleccionada.getId()));
             coleccion.deleteOne(query);
@@ -192,5 +177,27 @@ public class HelloController {
         SortedList<Persona> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tablaDatos.comparatorProperty());
         tablaDatos.setItems(sortedData);
+    }
+
+    private boolean isEmailValid(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        return pattern.matcher(email).matches();
+    }
+
+    private void showWarningAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private void showErrorAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
