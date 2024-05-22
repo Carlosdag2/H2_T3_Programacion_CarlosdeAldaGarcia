@@ -153,7 +153,7 @@ public class HelloController {
 
                 Stage stage = new Stage();
                 stage.setTitle("Actualizar Usuario");
-                stage.setScene(new Scene(root, 400, 300));
+                stage.setScene(new Scene(root, 500, 350));
                 stage.show();
                 stage.setOnHidden(e -> cargarDatos());
             } catch (IOException e) {
