@@ -73,12 +73,12 @@ public class HelloController {
             mongoClient = MongoClients.create("mongodb+srv://admin:admin@cluster0.gomt1im.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
             MongoDatabase database = mongoClient.getDatabase("hito2_mongo");
             coleccion = database.getCollection("usuarios");
-
-            coleccion.createIndex(Indexes.ascending("correo"), new IndexOptions().unique(true));
         } catch (MongoClientException e) {
             showErrorAlert("Error de Conexión", "No se pudo conectar a la base de datos.");
             return;
         }
+
+        coleccion.createIndex(Indexes.ascending("correo"), new IndexOptions().unique(true));
 
         // Cargar datos iniciales
         cargarDatos();
@@ -91,11 +91,10 @@ public class HelloController {
         masterData.clear();
         try {
             for (Document doc : coleccion.find()) {
-                String contrasenaDescifrada = Cipher.decrypt(doc.getString("contrasena"));
                 Persona persona = new Persona(doc.getObjectId("_id").toString(),
                         doc.getString("nombre"),
                         doc.getString("correo"),
-                        contrasenaDescifrada);
+                        doc.getString("contrasena"));
                 masterData.add(persona);
             }
             tablaDatos.setItems(masterData);
@@ -120,6 +119,7 @@ public class HelloController {
             Document doc = new Document("nombre", nombre).append("correo", correo).append("contrasena", contrasenaCifrada);
             try {
                 coleccion.insertOne(doc);
+                showInformationAlert("Información", "Usuario añadido con éxito.");
                 cargarDatos();
                 campoNombre.clear();
                 campoCorreo.clear();
@@ -172,6 +172,7 @@ public class HelloController {
             Document query = new Document("_id", new ObjectId(personaSeleccionada.getId()));
             try {
                 coleccion.deleteOne(query);
+                showInformationAlert("Información", "Usuario eliminado con éxito.");
                 cargarDatos();
             } catch (Exception e) {
                 showErrorAlert("Error al eliminar usuario", "Ocurrió un error al eliminar el usuario.");

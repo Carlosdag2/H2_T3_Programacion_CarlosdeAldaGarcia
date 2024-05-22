@@ -1,7 +1,7 @@
 package com.empresa.h2_t3_programacion_carlosdealdagarcia;
 
 public class Cipher {
-    private static final int KEY = 0xAB; // Clave fija para el cifrado (puedes cambiarla)
+    private static final int KEY = 0xAB; // Clave fija para el cifrado
 
     public static String encrypt(String input) {
         char[] chars = input.toCharArray();
@@ -9,9 +9,5 @@ public class Cipher {
             chars[i] ^= KEY; // Aplicar XOR con la clave
         }
         return new String(chars);
-    }
-
-    public static String decrypt(String input) {
-        return encrypt(input); // El cifrado y descifrado son el mismo proceso con XOR
     }
 }

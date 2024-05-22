@@ -52,7 +52,7 @@ public class ActualizarController {
             String correo = campoCorreo.getText();
             String contrasena = campoContrasena.getText();
 
-            if (nombre.isEmpty() || correo.isEmpty() || contrasena.isEmpty()) {
+            if (nombre.isEmpty() || correo.isEmpty()) {
                 showWarningAlert("Advertencia", "Por favor, rellena todos los campos.");
                 return;
             }
@@ -62,7 +62,18 @@ public class ActualizarController {
                 return;
             }
 
-            String contrasenaCifrada = Cipher.encrypt(contrasena);
+            // Obtener la contraseña cifrada actual
+            String contrasenaCifradaActual = persona.getContrasena();
+
+            // Cifrar la nueva contraseña solo si ha cambiado
+            String contrasenaCifrada;
+            if (!contrasena.equals(contrasenaCifradaActual)) {
+                contrasenaCifrada = Cipher.encrypt(contrasena);
+            } else {
+                contrasenaCifrada = contrasenaCifradaActual;
+            }
+
+            // Crear el documento de actualización
             Document query = new Document("_id", new ObjectId(persona.getId()));
             Document update = new Document("$set", new Document("nombre", nombre).append("correo", correo).append("contrasena", contrasenaCifrada));
 
