@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox prefHeight="400.0" prefWidth="400.0" alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.empresa.h2_t3_programacion_carlosdealdagarcia.LoginController" stylesheets="@styles.css" styleClass="login-view">
+    <Label text="Iniciar Sesión" styleClass="label-title"/>
+    <TextField fx:id="campoCorreo" promptText="Correo" styleClass="text-field" maxWidth="280.0"/>
+    <PasswordField fx:id="campoContrasena" promptText="Contraseña" styleClass="password-field" maxWidth="280.0"/>
+    <HBox alignment="CENTER" spacing="10.0">
+        <TextField fx:id="campoCaptcha" promptText="CAPTCHA" styleClass="text-field" maxWidth="120.0"/>
+        <!-- Aquí mostrarás el CAPTCHA generado -->
+        <!-- Puedes ajustar el tamaño y diseño según tus necesidades -->
+        <VBox fx:id="captchaBox" alignment="CENTER">
+            <Label fx:id="captchaLabel" text="CAPTCHA" styleClass="label"/>
+        </VBox>
+    </HBox>
+    <Button onAction="#handleLogin" text="Login" styleClass="button" maxWidth="150.0"/>
+    <Button onAction="#goToRegister" text="Register" styleClass="button-secondary" maxWidth="150.0"/>
+</VBox>

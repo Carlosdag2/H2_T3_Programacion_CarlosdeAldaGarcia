@@ -39,4 +39,17 @@ public class MongoDBConnection {
         collection.insertOne(newUser);
         return true;
     }
+
+    public boolean authenticateUser(String correo, String contrasena) {
+        MongoCollection<Document> collection = database.getCollection("usuarios");
+        Document query = new Document("correo", correo);
+        Document user = collection.find(query).first();
+
+        if (user != null) {
+            String storedPassword = user.getString("contrasena");
+            return Cipher.encrypt(contrasena).equals(storedPassword);
+        }
+
+        return false;
+    }
 }
