@@ -13,6 +13,12 @@ public class Persona {
         this.contrasena = contrasena;
     }
 
+    public Persona(String nombre, String correo, String contrasena) {
+        this.nombre = nombre;
+        this.correo = correo;
+        this.contrasena = contrasena;
+    }
+
     public String getId() {
         return id;
     }
@@ -45,4 +51,3 @@ public class Persona {
         this.contrasena = contrasena;
     }
 }
-

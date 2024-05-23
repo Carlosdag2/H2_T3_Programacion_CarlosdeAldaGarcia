@@ -23,4 +23,20 @@ public class MongoDBConnection {
     public MongoCollection<Document> getCollection(String collectionName) {
         return database.getCollection(collectionName);
     }
+
+    public boolean registerUser(Persona user) {
+        MongoCollection<Document> collection = database.getCollection("usuarios");
+        Document existingUser = collection.find(new Document("correo", user.getCorreo())).first();
+
+        if (existingUser != null) {
+            return false;
+        }
+
+        Document newUser = new Document("nombre", user.getNombre())
+                .append("correo", user.getCorreo())
+                .append("contrasena", Cipher.encrypt(user.getContrasena()));
+
+        collection.insertOne(newUser);
+        return true;
+    }
 }

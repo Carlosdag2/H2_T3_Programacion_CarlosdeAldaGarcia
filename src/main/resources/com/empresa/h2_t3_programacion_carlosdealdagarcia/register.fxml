@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox prefHeight="450.0" prefWidth="400.0" alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.empresa.h2_t3_programacion_carlosdealdagarcia.RegisterController" stylesheets="@styles.css" styleClass="register-view">
+    <Label text="Registrar Usuario" styleClass="label-title"/>
+    <TextField fx:id="campoNombre" promptText="Nombre" styleClass="text-field" maxWidth="280.0"/>
+    <TextField fx:id="campoCorreo" promptText="Correo" styleClass="text-field" maxWidth="280.0"/>
+    <PasswordField fx:id="campoContrasena" promptText="Contraseña" styleClass="password-field" maxWidth="280.0"/>
+    <HBox alignment="CENTER" spacing="10.0">
+        <TextField fx:id="campoCaptcha" promptText="CAPTCHA" styleClass="text-field" maxWidth="120.0"/>
+        <!-- Aquí mostrarás el CAPTCHA generado -->
+        <!-- Puedes ajustar el tamaño y diseño según tus necesidades -->
+        <VBox fx:id="captchaBox" alignment="CENTER">
+            <Label fx:id="captchaLabel" text="CAPTCHA" styleClass="label"/>
+        </VBox>
+    </HBox>
+    <Button onAction="#handleRegister" text="Register" styleClass="button" maxWidth="150.0"/>
+    <Button onAction="#goToLogin" text="Back to Login" styleClass="button-secondary" maxWidth="150.0"/>
+</VBox>
