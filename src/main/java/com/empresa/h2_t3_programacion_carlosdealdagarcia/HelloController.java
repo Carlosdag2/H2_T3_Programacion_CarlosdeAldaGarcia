@@ -1,12 +1,8 @@
 package com.empresa.h2_t3_programacion_carlosdealdagarcia;
 
 import com.mongodb.ErrorCategory;
-import com.mongodb.MongoClientException;
 import com.mongodb.MongoWriteException;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import javafx.collections.FXCollections;
@@ -49,7 +45,7 @@ public class HelloController {
     private TextField campoBusqueda;
     private ObservableList<Persona> masterData = FXCollections.observableArrayList();
 
-    private MongoClient mongoClient;
+    private MongoDBConnection mongoDBConnection;
     private MongoCollection<Document> coleccion;
 
     public void initialize() {
@@ -68,12 +64,11 @@ public class HelloController {
         columnaCorreo.setMaxWidth(1f * Integer.MAX_VALUE * 30);    // 30% del ancho disponible
         columnaContrasena.setMaxWidth(1f * Integer.MAX_VALUE * 30); // 30% del ancho disponible
 
-        // Establecer conexión a MongoDB
+        // Establecer conexión a MongoDB a través de MongoDBConnection
         try {
-            mongoClient = MongoClients.create("mongodb+srv://admin:admin@cluster0.gomt1im.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
-            MongoDatabase database = mongoClient.getDatabase("hito2_mongo");
-            coleccion = database.getCollection("usuarios");
-        } catch (MongoClientException e) {
+            mongoDBConnection = new MongoDBConnection();
+            coleccion = mongoDBConnection.getCollection("usuarios");
+        } catch (Exception e) {
             showErrorAlert("Error de Conexión", "No se pudo conectar a la base de datos.");
             return;
         }

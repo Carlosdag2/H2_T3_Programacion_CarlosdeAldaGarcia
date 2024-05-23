@@ -25,15 +25,15 @@ public class ActualizarController {
     private TextField campoContrasena;
 
     private Persona persona;
+    private MongoDBConnection mongoDBConnection;
     private MongoCollection<Document> coleccion;
 
     public void initialize() {
-        // Establecer conexión a MongoDB
+        // Establecer conexión a MongoDB a través de MongoDBConnection
         try {
-            var mongoClient = MongoClients.create("mongodb+srv://admin:admin@cluster0.gomt1im.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
-            MongoDatabase database = mongoClient.getDatabase("hito2_mongo");
-            coleccion = database.getCollection("usuarios");
-        } catch (MongoClientException e) {
+            mongoDBConnection = new MongoDBConnection();
+            coleccion = mongoDBConnection.getCollection("usuarios");
+        } catch (Exception e) {
             showErrorAlert("Error de Conexión", "No se pudo conectar a la base de datos.");
         }
     }
